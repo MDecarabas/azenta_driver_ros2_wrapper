@@ -25,23 +25,30 @@ from scheduler_client.block_to_robot_conversion import convert_block_name
 
  Note: item is currently unused as we don't have anything programmed for it yet so it is just ignored
 '''
-def add_work_to_peeler(self, peeler_name_or_id, block_name):  #TODO: do something with item
+def add_work_to_peeler(self):  #TODO: do something with item
     
+# TODO: Start the work if it is in Queued state 
+    # get_node_info(self, "P")
 
     # Select a node
-    id = -1 # Init 
+    # id = -1 # Init 
     try:
-        # Get node information
-        #target_node = self.search_for_node(id)  # See if id robot exists
-        target_node = peeler_name_or_id
+        if get_node_info(self, "P")["state"] != self.state["QUEUED"]:
+            self.logger.warning("Can't start the peeling job. Peeler is not in QUEUED state!")
 
-        # Error checking
-        if target_node["type"] == "-1":  # No such node
-            self.get_logger().error("id: %s doesn't exist" % id)
-            return self.status["ERROR"]
+      
+    #     # Get node information
+    #     #target_node = self.search_for_node(id)  # See if id robot exists
+    #     target_node = peeler_name_or_id
 
-        node_type = target_node["type"]  # These will be needed to access the service
-        id = target_node["id"]
+    #     # Error checking
+    #     if target_node["type"] == "-1":  # No such node
+    #         self.get_logger().error("id: %s doesn't exist" % id)
+    #         return self.status["ERROR"]
+
+    #     node_type = target_node["type"]  # These will be needed to access the service
+    #     id = target_node["id"]
+
 
     except Exception as e:
         self.get_logger().error("Error occured: %r" % (e,))
@@ -51,7 +58,7 @@ def add_work_to_peeler(self, peeler_name_or_id, block_name):  #TODO: do somethin
 
     # Client setup
     send_cli = self.create_client(
-        AddWorkPeeler, "/%s/%s/add_work_peeler" % (node_type, id)
+        StartWorkPeeler, "/%s/%s/add_work_peeler" % (node_type, id)
     )  # format of service is /{node_type}/{id}/{service name}
     while not send_cli.wait_for_service(timeout_sec=2.0):
         self.get_logger().info("Service not available, trying again...")
@@ -60,9 +67,7 @@ def add_work_to_peeler(self, peeler_name_or_id, block_name):  #TODO: do somethin
     # TODO: replacement parameter?
     
     # Create a request
-    send_request = AddWorkPeeler.Request()
-    # send_request.numFiles = len(files) # number of files to be sent to worker node
-    send_request.block_name = block_name # block name
+    send_request = StartWorkPeeler.Request()
 
     # Call Service to load module
     future = send_cli.call_async(send_request)
