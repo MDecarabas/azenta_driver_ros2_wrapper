@@ -276,5 +276,5 @@ class BROOKS_PEELER_CLIENT():
 
 if __name__ == "__main__":
 
-    dummy_peel = BROOKS_PEELER_CLIENT("/dev/ttyUSB0")
-    dummy_peel.check_status()
+    peeler_client = BROOKS_PEELER_CLIENT("/dev/ttyUSB0")
+    peeler_client.check_status()
