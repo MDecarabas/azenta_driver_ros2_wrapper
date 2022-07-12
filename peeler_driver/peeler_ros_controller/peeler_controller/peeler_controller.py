@@ -46,7 +46,7 @@ from peeler_client.publish_peeler_state import heartbeat_transmitter
 
     It is undecided if this package is directly running on the peeler or if it will follow the same model as the OT2 
 '''
-class PeelerHandler(Node):
+class PeelerController(Node):
     def __init__(self, name):
 
         # Node creation
