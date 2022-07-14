@@ -20,7 +20,7 @@ class BROOKS_PEELER_CLIENT():
         self.host_path = host_path
         self.baud_rate = baud_rate
         self.status_var = ""
-        self.version = self.check_version()
+        # self.version = self.check_version()
         self.tape_remaining_var = 0
         self.sensor_threshold_var = 0
 
@@ -246,7 +246,7 @@ class BROOKS_PEELER_CLIENT():
         success_msg = "Successfully moved conveyor out"
         err_msg = "Failed to move conveyor out"
         self.send_command(cmd_string, success_msg, err_msg) 
-
+#^^^ doesn't move
     def conveyor_in(self):
         cmd_string = '*movein\r\n'
         success_msg = "Successfully moved conveyor in"
@@ -264,7 +264,7 @@ class BROOKS_PEELER_CLIENT():
         success_msg = "Successfully moved elevator up"
         err_msg = "Failed to move elevator up"
         self.send_command(cmd_string, success_msg, err_msg) 
-
+#^^^ doesn't move
     def move_spool(self):
         cmd_string = '*movespool\r\n'
         success_msg = "Successfully moved spool 10 mm"
@@ -277,4 +277,4 @@ class BROOKS_PEELER_CLIENT():
 if __name__ == "__main__":
 
     peeler_client = BROOKS_PEELER_CLIENT("/dev/ttyUSB0")
-    peeler_client.check_status()
+    peeler_client.move_spool()

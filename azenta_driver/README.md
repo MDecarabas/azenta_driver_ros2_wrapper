@@ -59,10 +59,28 @@ Peeler is the main object responsible for removing seals off of microplates
 
 Identifies up to 3 errors currently present.
 <p>&nbsp;</p>
+Expected Response:
+
+COMMAND: *stat
+
+*ready:00,00,00  
+No Errors
+<p>&nbsp;</p>
 
 2.     peeler.check_version() 
 
 Identifies the XPeel virmware version.
+<p>&nbsp;</p>
+Expected Response:
+
+COMMAND: *version
+
+*2.11
+
+*ready:00,00,00  
+No Errors
+Version = 2.11
+
 <p>&nbsp;</p>
 
 3.     peeler.reset()
@@ -70,9 +88,37 @@ Identifies the XPeel virmware version.
 This command causes the spool to advance a few inches to fresh tape, and the elevator and conveyor axes to return to the home and ready for plate pick up position. A good use for the reset command is to ensure that fresh tape is presented after a long period of inactivity.
 <p>&nbsp;</p>
 
+Expected Response:
+
+COMMAND: *reset
+
+*ack  
+ACK TRUE
+
+*homing
+
+
+*ready:00,00,00  
+No Errors
+
 4.     peeler.restart()
 
 This command causes the XPeel to restart; the same as turning the power off and back on.
+<p>&nbsp;</p>
+Expected Response:  
+
+COMMAND: *restart
+
+*ack  
+ACK TRUE  
+*poweron
+
+
+*homing
+
+
+*ready:00,00,00  
+No Errors
 <p>&nbsp;</p>
 
 5.     peeler.peel(Set Number, Time)
@@ -98,6 +144,18 @@ Parameter sets 1-8 are fixed; parameter set 9 can be set and saved manually by t
 
 The second parameter, refers to adhere time in seconds.
 <p>&nbsp;</p>
+Expected Response:
+
+COMMAND: *xpeel:11
+
+*ack
+ACK TRUE
+
+
+*ready:00,00,00  
+No Errors
+
+<p>&nbsp;</p>
 
 6.     peeler.seal_check()
 
@@ -109,6 +167,17 @@ that will be generated during a normal desealing operation where the plate is sc
 length. The ‘sealcheck’ command is useful, however, to verify that the sensor parameters are set
 correctly to detect a particular seal type.
 <p>&nbsp;</p>
+Expected Response:
+
+COMMAND: *sealcheck
+
+*ack
+ACK TRUE
+
+
+*ready:00,00,00  
+No Errors
+<p>&nbsp;</p>
 
 7.     peeler.tape_remaining()
 
@@ -118,23 +187,74 @@ conveyor to the rotation of both the supply and take-up spools. After a complete
 the take-up spool. These calculations are not perfectly accurate but they will provide sufficient
 warning to avoid running out of tape unexpectedly.
 <p>&nbsp;</p>
+Expected Response:
 
+COMMAND: *tapeleft
+
+*ack
+ACK TRUE
+
+ *tape:99,99
+
+*ready:00,00,00  
+No Errors  
+Deseals on supply spool: 990  
+Deseals on take-up spool: 990
+<p>&nbsp;</p>
 8.     peeler.plate_check(y or n?)
 
 This command sets the plate check parameter to yes or no.
 <p>&nbsp;</p>
+Expected Response:
+
+Set platecheck to yes (y) or no (n): n  
+COMMAND: *platecheck:n
+
+*ack
+ACK TRUE
+
+*ready:00,00,00  
+No Errors
+
 
 9.     peeler.sensor_threshold()
 
 This command reports the threshold value of the seal detected sensor.
 <p>&nbsp;</p>
+Expected Response:
 
+COMMAND: *sealstat
+
+*ack
+ACK TRUE
+
+*seal:000
+
+*ready:00,00,00  
+No Errors  
+Threshold Value: 000
+<p>&nbsp;</p>
 10.     peeler.sensor_threshold_higher(Threshold Value)
 
 Setting the seal detected threshold value for the seal present if higher than threshold.
 
 The Threshold Value refers to the 3 digit threshold value. This command sets the seal detected threshold so that during an XPeel, sensor readings higher than this value represents an un-removed seal and will
 result in an error 04, “seal not removed”, message.
+<p>&nbsp;</p>
+Expected Response:
+
+3 digit threshold value: 200
+
+COMMAND: *sealhigher:200
+
+*ack
+ACK TRUE
+
+*seal:200
+
+*ready:00,00,00    
+No Errors  
+Threshold Value: 200
 <p>&nbsp;</p>
 
 11.     peeler.sensor_threshold_lower(Threshold Value)
@@ -145,32 +265,89 @@ Where Threshold Value refers to the 3 digit threshold value. This command sets t
 result in an error 04, “seal not removed”, message.
 <p>&nbsp;</p>
 
+Expected Response:
+
+3 digit threshold value: 100  
+COMMAND: *seallower:100
+
+*ack
+ACK TRUE
+
+*seal:100
+
+*ready:00,00,00  
+No Errors  
+Threshold Value: 100
+<p>&nbsp;</p>
 12.     peeler.conveyor_out()
 
 This command causes the conveyor to move out towards the user 7mm each time the command is called. When the conveyor reaches it’s fully extended home position no movement
 occurs.
 <p>&nbsp;</p>
 
+
 13.     peeler.conveyor_in()
 
 This command causes the conveyor to move in to the default ‘begin peel’ position.
 <p>&nbsp;</p>
+Expected Response:
+
+COMMAND: *movein
+
+*ack
+ACK TRUE
+
+
+*ready:00,00,00  
+No Errors
+<p>&nbsp;</p>
+
 
 14.     peeler.elevator_down()
 
 This command causes the elevator to move down until it is stopped by a plate or reaches its lower limit. The plate check option is disabled for this command.
 <p>&nbsp;</p>
+Expected Response:
 
+COMMAND: *movedown
+
+*ack
+ACK TRUE
+
+
+*ready:00,00,00  
+No Errors
+<p>&nbsp;</p>
 15.     peeler.elevator_up()
 
 This command causes the elevator to move up approximately 1.5mm each time the
 command is called until the elevator reaches it full up home position.
 <p>&nbsp;</p>
+Expected Response:
 
+COMMAND: *moveup
+
+*ack
+ACK TRUE
+
+
+*ready:00,00,00  
+No Errors
+<p>&nbsp;</p>
 16.     peeler.move_spool()
 
 This command causes the spool to advance approximately 10mm of tape.
 
+<p>&nbsp;</p>
+Expected Response:
+
+COMMAND: *movespool
+
+*ack
+ACK TRUE
+
+*ready:00,00,00  
+No Errors
 <p>&nbsp;</p>
 
 ## High Level Concepts
