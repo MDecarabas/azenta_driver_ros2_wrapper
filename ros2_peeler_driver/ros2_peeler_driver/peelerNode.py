@@ -8,6 +8,7 @@ from .services.srv import peelerAction
 # from .services.srv import peelerDesc
 
 
+
 from .drivers.peeler_client import BROOKS_PEELER_CLIENT # import peeler driver
 
 peeler = BROOKS_PEELER_CLIENT("/dev/ttyUSB0")           # port name for peeler
@@ -27,6 +28,15 @@ class peelerNode(Node):
 
         super().__init__('Peeler_Node')
 
+        # [
+        # [command, [peeler command 1, peeler command 2], [paramater 1( peeler command 1), paramater 2( peeler command 1)], [[],[]]
+        # repeat
+        # ]
+        self.peelerDescription = [
+            ["prepare_peeler",["reset", "check_version", "check_status"], [[""],[""],[""]]],
+            ["standard_peel", ["seal_check", "peel"], [[""],["loc", "time"]]],
+            ["check_threshold", ["sensor_threshold"], [[""]]]
+        ]
 
         timer_period = 0.5  # seconds
 
@@ -47,9 +57,7 @@ class peelerNode(Node):
         self.stateTimer = self.create_timer(timer_period, self.stateCallback)
 
         
-        # self.stateOutput = self.create_timer(timer_period, self.driverCommunication)      Publishing peeler output
-
-        
+            
         self.descriptionPub = self.create_publisher(String, 'description', 10)
 
         self.descriptionTimer = self.create_timer(timer_period, self.descriptionCallback)
@@ -60,12 +68,13 @@ class peelerNode(Node):
 
         self.cameraSub = self.create_subscription(Image, "camera", self.cameraCallback)
         
+        
     #     self.descriptionSer = self.create_service(String, "description", self.descriptionSerCallback)
 
     
     def actionSerCallback(self, request, response):
 
-        self.manager_command = "reset"  #request.action # Run commands if manager sends corresponding command
+        self.manager_command = request.action # Run commands if manager sends corresponding command
 
         match self.manager_command:
             

@@ -4,14 +4,15 @@ from typing import List
 import rclpy                 # import Rospy
 from rclpy.node import Node  # import Rospy Node
 from std_msgs.msg import String
-from .services.srv import peelerAction
-from .services.srv import peelerDesc
+# from .services.srv import peelerAction
+# from .services.srv import peelerDesc
+from .services.testDesc import command
 
 class masterNode(Node):
     
     def __init__(self):
 
-        super().__init__('Master_Node')
+        super().__init__('masterNode')
 
 
         timer_period = 0.5  # seconds
@@ -40,14 +41,39 @@ class masterNode(Node):
 
     
     def descriptionCallback(self, request, response):
-        
-        commandIndex = 0    #user input
 
-        self.manager_command = request.command[commandIndex]
+        ###############################  
+        '''
+         sets variable of commands, client command list, client commands, 
+         and parameters to the name of the commands, client command list, client commands, and parameters
+        '''
+        
+        for response_command in response.command:
+            # Command name
+            # Format: <command name>
+            globals()[f'{response_command[0]}'] = response_command[0]
+            
+            # Peeler commands
+            #Format: <command name>_command_list
+            globals()[f'{response_command[0]}_command_list'] = response_command[1]
+
+            # Each Peeler Command
+            # Format: <command name>_<peeler_command(without parentheses)>
+            for peeler_command in response_command[1]:
+                globals()[f'{response_command[0]}_{peeler_command}'] = peeler_command
+
+            # Paramaters
+            # Format: <command name>_<peeler_command(without parentheses)>_<parameter>
+                for parameter_list in response_command[2]:
+                    for parameter in parameter_list:
+                        globals()[f'{response_command[0]}_{peeler_command}_{parameter}'] = parameter
+
+
+
+
+        #################################
 
         response.success = True
-
-
 
 
 
