@@ -1,8 +1,11 @@
 #! /usr/bin/env python3
 
+from tkinter import Image
 import rclpy                 # import Rospy
 from rclpy.node import Node  # import Rospy Node
 from std_msgs.msg import String
+from .services.srv import peelerAction
+# from .services.srv import peelerDesc
 
 
 from .drivers.peeler_client import BROOKS_PEELER_CLIENT # import peeler driver
@@ -30,6 +33,8 @@ class peelerNode(Node):
         self.i1 = 0         # Count 1 
 
         self.i2 = 0         # Count 2
+
+        self.i3 = 0         # Count 3
         
 
         self.actionSub = self.create_subscription(String, 'action', self.actionCallback, 10)
@@ -50,6 +55,43 @@ class peelerNode(Node):
         self.descriptionTimer = self.create_timer(timer_period, self.descriptionCallback)
 
 
+        self.actionSer = self.create_service(String, "actionCall", self.actionSerCallback)
+        
+
+        self.cameraSub = self.create_subscription(Image, "camera", self.cameraCallback)
+        
+    #     self.descriptionSer = self.create_service(String, "description", self.descriptionSerCallback)
+
+    
+    def actionSerCallback(self, request, response):
+
+        self.manager_command = "reset"  #request.action # Run commands if manager sends corresponding command
+
+        match self.manager_command:
+            
+            case "prepare peeler":
+                peeler.reset()
+                peeler.check_version()
+                peeler.check_status()
+
+                response.success = True
+            
+            case "standard peel":
+                peeler.seal_check()
+                peeler.peel(1,2.5)
+
+                response.success = True
+
+            case "check threshold":
+                peeler.sensor_threshold()
+
+                response.success = True
+                
+            case other:
+                response.success = False
+
+        return response
+
     def actionCallback(self, msg):
 
         '''
@@ -58,6 +100,11 @@ class peelerNode(Node):
 
         self.get_logger().info('I am the action topic "%s"' % msg.data)
 
+ 
+    def cameraCallback(self, msg):
+
+        self.get_logger().info('I am the camera topic "%s"' % msg.data)
+        
 
     def stateCallback(self):
         '''
@@ -106,9 +153,9 @@ def main(args = None):
 
     rclpy.init(args=args)  # initialize Ros2 communication
 
-    node = peelerNode()
+    #node = peelerNode()
 
-    rclpy.spin(node)     # keep Ros2 communication open for action node
+    #rclpy.spin(node)     # keep Ros2 communication open for action node
 
     rclpy.shutdown()     # kill Ros2 communication
 

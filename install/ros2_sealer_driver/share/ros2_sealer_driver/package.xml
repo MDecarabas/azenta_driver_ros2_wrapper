@@ -6,6 +6,11 @@
   <description>TODO: Package description</description>
   <maintainer email="sanjivp27@gmail.com">rpl</maintainer>
   <license>TODO: License declaration</license>
+  
+  <depend>rclpy</depend>
+  <depend>std_messages</depend>
+  <depend>services</depend>
+
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

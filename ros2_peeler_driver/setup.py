@@ -21,7 +21,12 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'peelerNode = ros2_peeler_driver.peelerNode:main'
+            'masterNode = ros2_peeler_driver.masterNode:main',
+            
+            'peelerNode = ros2_peeler_driver.peelerNode:main',
+
+            'cameraNode = ros2_peeler_driver.peelerNode:main'          
+            
         ],
     },
 )

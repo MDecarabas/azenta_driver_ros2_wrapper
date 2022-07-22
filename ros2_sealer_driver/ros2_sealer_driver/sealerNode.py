@@ -3,6 +3,7 @@
 import rclpy                 # import Rospy
 from rclpy.node import Node  # import Rospy Node
 from std_msgs.msg import String
+from .services.srv import sealerAction
 
 from .drivers.sealer_client import A4S_SEALER_CLIENT # import sealer driver
 
@@ -42,6 +43,25 @@ class sealerNode(Node):
         self.descriptionPub = self.create_publisher(String, 'description', 10)
 
         self.descriptionTimer = self.create_timer(timer_period, self.descriptionCallback)
+
+      
+        self.actionService = self.create_service(String, 'actionCall', self.actionService)
+
+
+    def actionService(self, request, response):
+
+        self.manager_command = "test_command" #request.action # Run commands if manager sends corresponding command
+
+        match self.manager_command:
+
+            case "test_command":
+                sealer.reset()
+
+                response.success = True
+
+            case other:
+                response.success = False
+
 
 
     def actionCallback(self, msg):

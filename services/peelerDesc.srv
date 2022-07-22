@@ -1,0 +1,7 @@
+list command = [
+    "prepare peeler",
+    "standard peel",
+    "check threshold",
+    ]
+---
+bool success
