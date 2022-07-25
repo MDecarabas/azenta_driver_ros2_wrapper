@@ -57,14 +57,22 @@ class masterNode(Node):
             #Format: <command name>_command_list
             globals()[f'{response_command[0]}_command_list'] = response_command[1]
 
+
+
             # Each Peeler Command
             # Format: <command name>_<peeler_command(without parentheses)>
-            for peeler_command in response_command[1]:
+            for peeler_command_index,peeler_command in enumerate(response_command[1]):
                 globals()[f'{response_command[0]}_{peeler_command}'] = peeler_command
 
-            # Paramaters
-            # Format: <command name>_<peeler_command(without parentheses)>_<parameter>
+                
+
+                # Parameter List
+                # Format: <command name>_<peeler_command(without parentheses)>_parameter_list
                 for parameter_list in response_command[2]:
+                    globals()[f'{response_command[0]}_{peeler_command}_parameter_list'] = response_command[2][peeler_command_index]
+                
+                    # Parameter
+                    # Format: <command name>_<peeler_command(without parentheses)>_<parameter>
                     for parameter in parameter_list:
                         globals()[f'{response_command[0]}_{peeler_command}_{parameter}'] = parameter
 

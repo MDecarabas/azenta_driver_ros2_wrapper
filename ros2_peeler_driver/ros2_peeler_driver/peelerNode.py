@@ -115,15 +115,23 @@ class peelerNode(Node):
         self.get_logger().info('I am the camera topic "%s"' % msg.data)
         
 
+
     def stateCallback(self):
+
         '''
-        Publishes the peeler state to the 'state' topic.
+        Publishes the peeler state to the 'state' topic. 
         '''
-        msg1 = String()
-        msg1.data = 'This is the state topic: %d' % self.i1
-        self.statePub.publish(msg1)
-        self.get_logger().info('Publishing: "%s"' % msg1.data)
-        self.i1 += 1
+
+        msg = String()
+
+        msg.data = 'This is the state topic: %d' % self.i
+
+        self.statePub.publish(msg)
+
+        # self.get_logger().info('Publishing: "%s"' % msg1.data)
+
+        self.i += 1
+
 
     def descriptionCallback(self):
         '''
