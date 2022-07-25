@@ -28,8 +28,10 @@ class peelerNode(Node):
 
         super().__init__('Peeler_Node')
 
+        self.state = "READY"
+
         # [
-        # [command, [peeler command 1, peeler command 2], [paramater 1( peeler command 1), paramater 2( peeler command 1)], [[],[]]
+        # [command, [peeler command 1, peeler command 2], [[paramater 1( peeler command 1), paramater 2( peeler command 1)], [],[]]
         # repeat
         # ]
         self.peelerDescription = [
@@ -76,6 +78,8 @@ class peelerNode(Node):
 
         self.manager_command = request.action # Run commands if manager sends corresponding command
 
+        self.state = "BUSY"
+
         match self.manager_command:
             
             case "prepare peeler":
@@ -98,6 +102,14 @@ class peelerNode(Node):
                 
             case other:
                 response.success = False
+        
+        self.state = "COMPLETED"
+
+        
+        if "Error:" in peeler.peeler_output:
+            self.state = peeler.error_msg
+        
+        peeler.error_msg = ""
 
         return response
 
@@ -124,11 +136,11 @@ class peelerNode(Node):
 
         msg = String()
 
-        msg.data = 'This is the state topic: %d' % self.i
+        msg.data = 'State: %s' % self.state
 
         self.statePub.publish(msg)
 
-        # self.get_logger().info('Publishing: "%s"' % msg1.data)
+        self.get_logger().info('Publishing: "%s"' % msg.data)
 
         self.i += 1
 

@@ -26,7 +26,7 @@ class BROOKS_PEELER_CLIENT():
         # self.version = self.check_version()
         self.tape_remaining_var = 0
         self.sensor_threshold_var = 0
-        
+        self.error_msg = ""
 
 
     def connect_peeler(self):
@@ -130,6 +130,8 @@ class BROOKS_PEELER_CLIENT():
 
         self.peeler_output = self.peeler_output + error_code_msg + '\n'
 
+        if "Error:" in error_code_msg:
+            self.error_msg = self.error_msg + error_code_msg + "\n"
 
     def check_status(self):
         '''
